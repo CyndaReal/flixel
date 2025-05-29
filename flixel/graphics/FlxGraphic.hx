@@ -27,103 +27,103 @@ class FlxGraphic implements IFlxDestroyable
 	/**
 	 * Creates and caches FlxGraphic object from openfl.Assets key string.
 	 *
-	 * @param   Source   `openfl.Assets` key string. For example: `"assets/image.png"`.
-	 * @param   Unique   Ensures that the `BitmapData` uses a new slot in the cache.
+	 * @param   source   `openfl.Assets` key string. For example: `"assets/image.png"`.
+	 * @param   unique   Ensures that the `BitmapData` uses a new slot in the cache.
 	 *                   If `true`, then `BitmapData` for this `FlxGraphic` will be cloned, which means extra memory.
-	 * @param   Key      Force the cache to use a specific key to index the bitmap.
-	 * @param   Cache    Whether to use graphic caching or not. Default value is `true`, which means automatic caching.
+	 * @param   key      Force the cache to use a specific key to index the bitmap.
+	 * @param   cache    Whether to use graphic caching or not. Default value is `true`, which means automatic caching.
 	 * @return  Cached `FlxGraphic` object we just created.
 	 */
-	public static function fromAssetKey(Source:String, Unique:Bool = false, ?Key:String, Cache:Bool = true):FlxGraphic
+	public static function fromAssetKey(source:String, unique:Bool = false, ?key:String, cache:Bool = true):FlxGraphic
 	{
 		var bitmap:BitmapData = null;
 
-		if (!Cache)
+		if (!cache)
 		{
-			bitmap = FlxG.assets.getBitmapData(Source);
+			bitmap = FlxG.assets.getBitmapData(source);
 			if (bitmap == null)
 				return null;
-			return createGraphic(bitmap, Key, Unique, Cache);
+			return createGraphic(bitmap, key, unique, cache);
 		}
 
-		var key:String = FlxG.bitmap.generateKey(Source, Key, Unique);
+		var key:String = FlxG.bitmap.generateKey(source, key, unique);
 		var graphic:FlxGraphic = FlxG.bitmap.get(key);
 		if (graphic != null)
 			return graphic;
 
-		bitmap = FlxG.assets.getBitmapData(Source);
+		bitmap = FlxG.assets.getBitmapData(source);
 		if (bitmap == null)
 			return null;
 
-		graphic = createGraphic(bitmap, key, Unique);
-		graphic.assetsKey = Source;
+		graphic = createGraphic(bitmap, key, unique);
+		graphic.assetsKey = source;
 		return graphic;
 	}
 
 	/**
 	 * Creates and caches `FlxGraphic` object from a specified `Class<BitmapData>`.
 	 *
-	 * @param   Source   `Class<BitmapData>` to create `BitmapData` for `FlxGraphic` from.
-	 * @param   Unique   Ensures that the `BitmapData` uses a new slot in the cache.
+	 * @param   source   `Class<BitmapData>` to create `BitmapData` for `FlxGraphic` from.
+	 * @param   unique   Ensures that the `BitmapData` uses a new slot in the cache.
 	 *                   If `true`, then `BitmapData` for this `FlxGraphic` will be cloned, which means extra memory.
-	 * @param   Key      Force the cache to use a specific key to index the bitmap.
-	 * @param   Cache    Whether to use graphic caching or not. Default value is `true`, which means automatic caching.
+	 * @param   key      Force the cache to use a specific key to index the bitmap.
+	 * @param   cache    Whether to use graphic caching or not. Default value is `true`, which means automatic caching.
 	 * @return  `FlxGraphic` object we just created.
 	 */
-	public static function fromClass(Source:Class<BitmapData>, Unique:Bool = false, ?Key:String, Cache:Bool = true):FlxGraphic
+	public static function fromClass(source:Class<BitmapData>, unique:Bool = false, ?key:String, cache:Bool = true):FlxGraphic
 	{
 		var bitmap:BitmapData = null;
-		if (!Cache)
+		if (!cache)
 		{
-			bitmap = FlxAssets.getBitmapFromClass(Source);
-			return createGraphic(bitmap, Key, Unique, Cache);
+			bitmap = FlxAssets.getBitmapFromClass(source);
+			return createGraphic(bitmap, key, unique, cache);
 		}
 
-		var key:String = FlxG.bitmap.getKeyForClass(Source);
-		key = FlxG.bitmap.generateKey(key, Key, Unique);
+		var key:String = FlxG.bitmap.getKeyForClass(source);
+		key = FlxG.bitmap.generateKey(key, key, unique);
 		var graphic:FlxGraphic = FlxG.bitmap.get(key);
 		if (graphic != null)
 			return graphic;
 
-		bitmap = FlxAssets.getBitmapFromClass(Source);
-		graphic = createGraphic(bitmap, key, Unique);
-		graphic.assetsClass = Source;
+		bitmap = FlxAssets.getBitmapFromClass(source);
+		graphic = createGraphic(bitmap, key, unique);
+		graphic.assetsClass = source;
 		return graphic;
 	}
 
 	/**
 	 * Creates and caches `FlxGraphic` object from specified `BitmapData` object.
 	 *
-	 * @param   Source   `BitmapData` for `FlxGraphic` to use.
-	 * @param   Unique   Ensures that the `BitmapData` uses a new slot in the cache.
+	 * @param   source   `BitmapData` for `FlxGraphic` to use.
+	 * @param   unique   Ensures that the `BitmapData` uses a new slot in the cache.
 	 *                   If `true`, then `BitmapData` for this `FlxGraphic` will be cloned, which means extra memory.
-	 * @param   Key      Force the cache to use a specific key to index the bitmap.
-	 * @param   Cache    Whether to use graphic caching or not. Default value is `true`, which means automatic caching.
+	 * @param   key      Force the cache to use a specific key to index the bitmap.
+	 * @param   cache    Whether to use graphic caching or not. Default value is `true`, which means automatic caching.
 	 * @return  `FlxGraphic` object we just created.
 	 */
-	public static function fromBitmapData(Source:BitmapData, Unique:Bool = false, ?Key:String, Cache:Bool = true):FlxGraphic
+	public static function fromBitmapData(source:BitmapData, unique:Bool = false, ?key:String, cache:Bool = true):FlxGraphic
 	{
-		if (!Cache)
-			return createGraphic(Source, Key, Unique, Cache);
-
-		var key:String = FlxG.bitmap.findKeyForBitmap(Source);
-
+		if (!cache)
+			return createGraphic(source, key, unique, cache);
+			
+		var findKey:String = FlxG.bitmap.findKeyForBitmap(source);
+		
 		var assetKey:String = null;
 		var assetClass:Class<BitmapData> = null;
 		var graphic:FlxGraphic = null;
-		if (key != null)
+		if (findKey != null)
 		{
-			graphic = FlxG.bitmap.get(key);
+			graphic = FlxG.bitmap.get(findKey);
 			assetKey = graphic.assetsKey;
 			assetClass = graphic.assetsClass;
 		}
 
-		key = FlxG.bitmap.generateKey(key, Key, Unique);
-		graphic = FlxG.bitmap.get(key);
+		findKey = FlxG.bitmap.generateKey(findKey, key, unique);
+		graphic = FlxG.bitmap.get(findKey);
 		if (graphic != null)
 			return graphic;
 
-		graphic = createGraphic(Source, key, Unique);
+		graphic = createGraphic(source, findKey, unique);
 		graphic.assetsKey = assetKey;
 		graphic.assetsClass = assetClass;
 		return graphic;
@@ -133,28 +133,28 @@ class FlxGraphic implements IFlxDestroyable
 	 * Creates and (optionally) caches a `FlxGraphic` object from the specified `FlxFrame`.
 	 * It uses frame's `BitmapData`, not the `frame.parent.bitmap`.
 	 *
-	 * @param   Source   `FlxFrame` to get the `BitmapData` from.
-	 * @param   Unique   Ensures that the bitmap data uses a new slot in the cache.
+	 * @param   source   `FlxFrame` to get the `BitmapData` from.
+	 * @param   unique   Ensures that the bitmap data uses a new slot in the cache.
 	 *                   If `true`, then `BitmapData` for this `FlxGraphic` will be cloned, which means extra memory.
-	 * @param   Key      Force the cache to use a specific key to index the bitmap.
-	 * @param   Cache    Whether to use graphic caching or not. Default value is `true`, which means automatic caching.
+	 * @param   key      Force the cache to use a specific key to index the bitmap.
+	 * @param   cache    Whether to use graphic caching or not. Default value is `true`, which means automatic caching.
 	 * @return  `FlxGraphic` object we just created.
 	 */
-	public static function fromFrame(Source:FlxFrame, Unique:Bool = false, ?Key:String, Cache:Bool = true):FlxGraphic
+	public static function fromFrame(source:FlxFrame, unique:Bool = false, ?key:String, cache:Bool = true):FlxGraphic
 	{
-		var key:String = Source.name;
-		if (key == null)
-			key = Source.frame.toString();
-		key = Source.parent.key + ":" + key;
-		key = FlxG.bitmap.generateKey(key, Key, Unique);
-		var graphic:FlxGraphic = FlxG.bitmap.get(key);
+		var otherKey:String = source.name;
+		if (otherKey == null)
+			otherKey = source.frame.toString();
+		otherKey = source.parent.key + ":" + otherKey;
+		otherKey = FlxG.bitmap.generateKey(otherKey, key, unique);
+		var graphic:FlxGraphic = FlxG.bitmap.get(otherKey);
 		if (graphic != null)
 			return graphic;
 
-		var bitmap:BitmapData = Source.paint();
-		graphic = createGraphic(bitmap, key, Unique, Cache);
+		var bitmap:BitmapData = source.paint();
+		graphic = createGraphic(bitmap, otherKey, unique, cache);
 		var image:FlxImageFrame = FlxImageFrame.fromGraphic(graphic);
-		image.getByIndex(0).name = Source.name;
+		image.getByIndex(0).name = source.name;
 		return graphic;
 	}
 
@@ -163,99 +163,99 @@ class FlxGraphic implements IFlxDestroyable
 	 * It uses `frames.parent.bitmap` as a source for the `FlxGraphic`'s `BitmapData`.
 	 * It also copies all the frames collections onto the newly created `FlxGraphic`.
 	 *
-	 * @param   Source   `FlxFramesCollection` to get the `BitmapData` from.
-	 * @param   Unique   Ensures that the `BitmapData` uses a new slot in the cache.
+	 * @param   source   `FlxFramesCollection` to get the `BitmapData` from.
+	 * @param   unique   Ensures that the `BitmapData` uses a new slot in the cache.
 	 *                   If `true`, then `BitmapData` for this `FlxGraphic` will be cloned, which means extra memory.
 	 * @param   Key      Force the cache to use a specific key to index the bitmap.
 	 * @return  Cached `FlxGraphic` object we just created.
 	 */
-	public static inline function fromFrames(Source:FlxFramesCollection, Unique:Bool = false, ?Key:String):FlxGraphic
+	public static inline function fromFrames(source:FlxFramesCollection, unique:Bool = false, ?Key:String):FlxGraphic
 	{
-		return fromGraphic(Source.parent, Unique, Key);
+		return fromGraphic(source.parent, unique, Key);
 	}
 
 	/**
 	 * Creates and caches a `FlxGraphic` object from the specified `FlxGraphic` object.
 	 * It copies all the frame collections onto the newly created `FlxGraphic`.
 	 *
-	 * @param   Source   `FlxGraphic` to get the `BitmapData` from.
-	 * @param   Unique   Ensures that the `BitmapData` uses a new slot in the cache.
+	 * @param   source   `FlxGraphic` to get the `BitmapData` from.
+	 * @param   unique   Ensures that the `BitmapData` uses a new slot in the cache.
 	 *                   If `true`, then `BitmapData` for this `FlxGraphic` will be cloned, which means extra memory.
-	 * @param   Key      Force the cache to use a specific key to index the bitmap.
+	 * @param   key      Force the cache to use a specific key to index the bitmap.
 	 * @return  Cached `FlxGraphic` object we just created.
 	 */
-	public static function fromGraphic(Source:FlxGraphic, Unique:Bool = false, ?Key:String):FlxGraphic
+	public static function fromGraphic(source:FlxGraphic, unique:Bool = false, ?key:String):FlxGraphic
 	{
-		if (!Unique)
-			return Source;
-
-		var key:String = FlxG.bitmap.generateKey(Source.key, Key, Unique);
-		var graphic:FlxGraphic = createGraphic(Source.bitmap, key, Unique);
-		graphic.unique = Unique;
-		graphic.assetsClass = Source.assetsClass;
-		graphic.assetsKey = Source.assetsKey;
+		if (!unique)
+			return source;
+			
+		var otherKey:String = FlxG.bitmap.generateKey(source.key, key, unique);
+		var graphic:FlxGraphic = createGraphic(source.bitmap, otherKey, unique);
+		graphic.unique = unique;
+		graphic.assetsClass = source.assetsClass;
+		graphic.assetsKey = source.assetsKey;
 		return FlxG.bitmap.addGraphic(graphic);
 	}
 
 	/**
 	 * Generates and caches new `FlxGraphic` object with a colored rectangle.
 	 *
-	 * @param   Width    How wide the rectangle should be.
-	 * @param   Height   How high the rectangle should be.
-	 * @param   Color    What color the rectangle should have (`0xAARRGGBB`).
-	 * @param   Unique   Ensures that the `BitmapData` uses a new slot in the cache.
-	 * @param   Key      Force the cache to use a specific key to index the bitmap.
+	 * @param   width    How wide the rectangle should be.
+	 * @param   height   How high the rectangle should be.
+	 * @param   color    What color the rectangle should have (`0xAARRGGBB`).
+	 * @param   unique   Ensures that the `BitmapData` uses a new slot in the cache.
+	 * @param   key      Force the cache to use a specific key to index the bitmap.
 	 * @return  The `FlxGraphic` object we just created.
 	 */
-	public static function fromRectangle(Width:Int, Height:Int, Color:FlxColor, Unique:Bool = false, ?Key:String):FlxGraphic
+	public static function fromRectangle(width:Int, height:Int, color:FlxColor, unique:Bool = false, ?key:String):FlxGraphic
 	{
-		var systemKey:String = Width + "x" + Height + ":" + Color;
-		var key:String = FlxG.bitmap.generateKey(systemKey, Key, Unique);
-
-		var graphic:FlxGraphic = FlxG.bitmap.get(key);
+		var systemKey:String = width + "x" + height + ":" + color;
+		var otherKey:String = FlxG.bitmap.generateKey(systemKey, key, unique);
+		
+		var graphic:FlxGraphic = FlxG.bitmap.get(otherKey);
 		if (graphic != null)
 			return graphic;
 
-		var bitmap = new BitmapData(Width, Height, true, Color);
-		return createGraphic(bitmap, key);
+		var bitmap = new BitmapData(width, height, true, color);
+		return createGraphic(bitmap, otherKey);
 	}
 
 	/**
 	 * Helper method for cloning specified `BitmapData` if necessary.
 	 *
-	 * @param   Bitmap   `BitmapData` to process
-	 * @param   Unique   Whether we need to clone specified `BitmapData` object or not
+	 * @param   bitmap   `BitmapData` to process
+	 * @param   unique   Whether we need to clone specified `BitmapData` object or not
 	 * @return  Processed `BitmapData`
 	 */
-	static inline function getBitmap(Bitmap:BitmapData, Unique:Bool = false):BitmapData
+	static inline function getBitmap(bitmap:BitmapData, unique:Bool = false):BitmapData
 	{
-		return Unique ? Bitmap.clone() : Bitmap;
+		return unique ? bitmap.clone() : bitmap;
 	}
 
 	/**
 	 * Creates and caches the specified `BitmapData` object.
 	 *
-	 * @param   Bitmap   `BitmapData` to use as a graphic source for the new `FlxGraphic`.
-	 * @param   Key      Key to use as a cache key for the created `FlxGraphic`.
-	 * @param   Unique   Whether the new `FlxGraphic` object uses a unique `BitmapData` or not.
+	 * @param   bitmap   `BitmapData` to use as a graphic source for the new `FlxGraphic`.
+	 * @param   key      Key to use as a cache key for the created `FlxGraphic`.
+	 * @param   unique   Whether the new `FlxGraphic` object uses a unique `BitmapData` or not.
 	 *                   If `true`, the specified `BitmapData` will be cloned.
-	 * @param   Cache    Whether to use graphic caching or not. Default value is `true`, which means automatic caching.
+	 * @param   cache    Whether to use graphic caching or not. Default value is `true`, which means automatic caching.
 	 * @return  Created `FlxGraphic` object.
 	 */
-	static function createGraphic(Bitmap:BitmapData, Key:String, Unique:Bool = false, Cache:Bool = true):FlxGraphic
+	static function createGraphic(bitmap:BitmapData, key:String, unique:Bool = false, cache:Bool = true):FlxGraphic
 	{
-		Bitmap = FlxGraphic.getBitmap(Bitmap, Unique);
+		bitmap = FlxGraphic.getBitmap(bitmap, unique);
 		var graphic:FlxGraphic = null;
 
-		if (Cache)
+		if (cache)
 		{
-			graphic = new FlxGraphic(Key, Bitmap);
-			graphic.unique = Unique;
+			graphic = new FlxGraphic(key, bitmap);
+			graphic.unique = unique;
 			FlxG.bitmap.addGraphic(graphic);
 		}
 		else
 		{
-			graphic = new FlxGraphic(null, Bitmap);
+			graphic = new FlxGraphic(null, bitmap);
 		}
 
 		return graphic;
@@ -380,18 +380,28 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	@:deprecated("_imageFrame is deprecated, use imageFrame")
 	var _imageFrame(get, set):FlxImageFrame;
-	inline function get__imageFrame() return imageFrame;
-	inline function set__imageFrame(value:FlxImageFrame) return imageFrame = value;
-
+	inline function get__imageFrame()
+		return imageFrame;
+		
+	inline function set__imageFrame(value:FlxImageFrame)
+		return imageFrame = value;
+		
 	@:deprecated('_useCount is deprecated, use incrementUseCount and decrementUseCount')
 	var _useCount(get, set):Int;
-	inline function get__useCount() return useCount;
-	inline function set__useCount(value:Int) return useCount = value;
-
+	inline function get__useCount()
+		return useCount;
+		
+	inline function set__useCount(value:Int)
+		return useCount = value;
+		
 	@:deprecated('_destroyOnNoUse is deprecated, use destroyOnNoUse')
 	var _destroyOnNoUse(get, set):Bool;
-	inline function get__destroyOnNoUse() return destroyOnNoUse;
-	inline function set__destroyOnNoUse(value:Bool) return destroyOnNoUse = value;
+	inline function get__destroyOnNoUse()
+		return destroyOnNoUse;
+		
+	inline function set__destroyOnNoUse(value:Bool)
+		return destroyOnNoUse = value;
+		
 	/**
 	 * `FlxGraphic` constructor
 	 *

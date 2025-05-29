@@ -9,7 +9,6 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import haxe.xml.Access;
-import openfl.geom.Rectangle;
 
 /**
  * Atlas frames collection. It makes possible to use texture atlases in Flixel.
@@ -28,7 +27,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 	{
 		while (usedGraphics.length > 0)
 			usedGraphics.shift().decrementUseCount();
-		
+
 		super.destroy();
 	}
 
@@ -89,7 +88,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		// JSON-Hash
 		else
 		{
-			for (name=>frame in data.frames.toHash())
+			for (name => frame in data.frames.toHash())
 				texturePackerHelper(name, frame, frames, useFrameDuration);
 		}
 
@@ -255,7 +254,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		{
 			if (!texture.has.width && texture.has.w)
 				throw "Sparrow v1 is not supported, use Sparrow v2";
-			
+
 			var name = texture.att.name;
 			var trimmed = texture.has.frameX;
 			var rotated = (texture.has.rotated && texture.att.rotated == "true");
@@ -264,7 +263,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 			var rect = FlxRect.get(Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y), Std.parseFloat(texture.att.width),
 				Std.parseFloat(texture.att.height));
-			
+
 			var size = if (trimmed)
 			{
 				FlxRect.get(Std.parseInt(texture.att.frameX), Std.parseInt(texture.att.frameY), Std.parseInt(texture.att.frameWidth),
@@ -274,7 +273,6 @@ class FlxAtlasFrames extends FlxFramesCollection
 			{
 				FlxRect.get(0, 0, rect.width, rect.height);
 			}
-			
 
 			var angle = rotated ? FlxFrameAngle.ANGLE_NEG_90 : FlxFrameAngle.ANGLE_0;
 
@@ -286,18 +284,18 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 			// Prevents issues caused by adding frames of size 0
 			if (rect.width == 0 || rect.height == 0)
-            {
-                if (!trimmed)
-                    size.setSize(1,1);
-                
-                var frame = frames.addEmptyFrame(size);
-
-                frame.name = name;
-                frame.offset.copyFrom(offset);
-                
-                continue;
-            }
-
+			{
+				if (!trimmed)
+					size.setSize(1, 1);
+					
+				var frame = frames.addEmptyFrame(size);
+				
+				frame.name = name;
+				frame.offset.copyFrom(offset);
+				
+				continue;
+			}
+			
 			frames.addAtlasFrame(rect, sourceSize, offset, name, angle, flipX, flipY);
 		}
 
@@ -355,15 +353,15 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Parsing method for Sprite Sheet Packer atlases (http://spritesheetpacker.codeplex.com/).
 	 *
-	 * @param   Source        The image source (can be `FlxGraphic`, `String` or `BitmapData`).
-	 * @param   Description   Contents of the file with atlas description.
+	 * @param   source        The image source (can be `FlxGraphic`, `String` or `BitmapData`).
+	 * @param   description   Contents of the file with atlas description.
 	 *                        You can get it with `FlxG.assets.getText(path/to/description/file)`.
 	 *                        Or you can just pass a path to the description file in the assets directory.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
-	public static function fromSpriteSheetPacker(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
+	public static function fromSpriteSheetPacker(source:FlxGraphicAsset, description:String):FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(Source);
+		var graphic:FlxGraphic = FlxG.bitmap.add(source);
 		if (graphic == null)
 			return null;
 
@@ -372,15 +370,15 @@ class FlxAtlasFrames extends FlxFramesCollection
 		if (frames != null)
 			return frames;
 
-		if (graphic == null || Description == null)
+		if (graphic == null || description == null)
 			return null;
 
 		frames = new FlxAtlasFrames(graphic);
 
-		if (FlxG.assets.exists(Description))
-			Description = FlxG.assets.getTextUnsafe(Description);
-
-		var pack = StringTools.trim(Description);
+		if (FlxG.assets.exists(description))
+			description = FlxG.assets.getTextUnsafe(description);
+			
+		var pack = StringTools.trim(description);
 		var lines:Array<String> = pack.split("\n");
 
 		for (i in 0...lines.length)
@@ -449,7 +447,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 	{
 		for (frame in collection.frames)
 			pushFrame(frame, overwriteHash);
-		
+
 		if (!usedGraphics.contains(collection.parent))
 		{
 			usedGraphics.push(collection.parent);
@@ -477,9 +475,9 @@ class FlxAtlasFrames extends FlxFramesCollection
 	}
 }
 
-@:deprecated("Use TexturePackerAtlas instead")// 5.4.0
+@:deprecated("Use TexturePackerAtlas instead") // 5.4.0
 typedef TexturePackerObject = TexturePackerAtlas;
-@:deprecated("Use TexturePackerAtlasFrame instead")// 5.4.0
+@:deprecated("Use TexturePackerAtlasFrame instead") // 5.4.0
 typedef TexturePackerFrameData = TexturePackerAtlasFrame;
-@:deprecated("Use AtlasRect instead")// 5.4.0
+@:deprecated("Use AtlasRect instead") // 5.4.0
 typedef TexturePackerFrameRect = AtlasRect;

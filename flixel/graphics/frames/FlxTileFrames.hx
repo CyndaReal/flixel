@@ -175,17 +175,17 @@ class FlxTileFrames extends FlxFramesCollection
 	/**
 	 * Just generates tile frames collection from specified array of frames.
 	 *
-	 * @param   Frames   `Array` of frames to generate tile frames from.
+	 * @param   frames   `Array` of frames to generate tile frames from.
 	 *                   They all should have the same source size and parent graphic.
 	 *                   If not then `null` will be returned.
 	 * @return  Generated collection of frames.
 	 */
-	public static function fromFrames(Frames:Array<FlxFrame>):FlxTileFrames
+	public static function fromFrames(frames:Array<FlxFrame>):FlxTileFrames
 	{
-		var firstFrame:FlxFrame = Frames[0];
+		var firstFrame:FlxFrame = frames[0];
 		var graphic:FlxGraphic = firstFrame.parent;
 
-		for (frame in Frames)
+		for (frame in frames)
 		{
 			if (frame.parent != firstFrame.parent || !frame.sourceSize.equals(firstFrame.sourceSize))
 			{
@@ -200,10 +200,10 @@ class FlxTileFrames extends FlxFramesCollection
 		tileFrames.atlasFrame = null;
 		tileFrames.tileSize = FlxPoint.get().copyFrom(firstFrame.sourceSize);
 		tileFrames.tileSpacing = FlxPoint.get(0, 0);
-		tileFrames.numCols = Frames.length;
+		tileFrames.numCols = frames.length;
 		tileFrames.numRows = 1;
 
-		for (frame in Frames)
+		for (frame in frames)
 		{
 			tileFrames.frames.push(frame);
 
@@ -219,27 +219,27 @@ class FlxTileFrames extends FlxFramesCollection
 	 * a common name (e.g. `"tiles-"`) and differ in indices (e.g. `"001"`, `"002"`, etc.).
 	 * This method is similar to `FlxAnimationController`'s `addByPrefix()`.
 	 *
-	 * @param    Frames   Collection of atlas frames to generate tiles from.
-	 * @param    Prefix   Common beginning of image names in atlas (e.g. `"tiles-"`).
+	 * @param    frames   Collection of atlas frames to generate tiles from.
+	 * @param    prefix   Common beginning of image names in atlas (e.g. `"tiles-"`).
 	 * @return   Generated tile frames collection.
 	 */
-	public static function fromAtlasByPrefix(Frames:FlxAtlasFrames, Prefix:String):FlxTileFrames
+	public static function fromAtlasByPrefix(frames:FlxAtlasFrames, prefix:String):FlxTileFrames
 	{
 		var framesToAdd = new Array<FlxFrame>();
 
-		for (frame in Frames.frames)
+		for (frame in frames.frames)
 		{
-			if (StringTools.startsWith(frame.name, Prefix))
+			if (StringTools.startsWith(frame.name, prefix))
 				framesToAdd.push(frame);
 		}
 
 		if (framesToAdd.length > 0)
 		{
 			var name:String = framesToAdd[0].name;
-			var postIndex:Int = name.indexOf(".", Prefix.length);
+			var postIndex:Int = name.indexOf(".", prefix.length);
 			var suffix:String = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
 
-			FlxFrame.sortFrames(framesToAdd, Prefix, suffix);
+			FlxFrame.sortFrames(framesToAdd, prefix, suffix);
 			return FlxTileFrames.fromFrames(framesToAdd);
 		}
 

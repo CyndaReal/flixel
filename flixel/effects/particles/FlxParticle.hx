@@ -209,9 +209,9 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		super.update(elapsed);
 	}
 
-	override public function reset(X:Float, Y:Float):Void
+	override public function reset(x:Float, y:Float):Void
 	{
-		super.reset(X, Y);
+		super.reset(x, y);
 		age = 0;
 		visible = true;
 	}

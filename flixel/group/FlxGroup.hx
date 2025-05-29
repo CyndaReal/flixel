@@ -47,7 +47,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			}
 			else if (basic.flixelType == SPRITEGROUP)
 			{
-				return cast (cast basic:FlxTypedSpriteGroup<Dynamic>).group;
+				return cast(cast basic : FlxTypedSpriteGroup<Dynamic>).group;
 			}
 		}
 		return null;
@@ -309,10 +309,10 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		{
 			if (objectFactory != null)
 				return add(objectFactory());
-			
+
 			if (objectClass != null)
 				return add(Type.createInstance(objectClass, []));
-			
+
 			return null;
 		}
 		
@@ -322,7 +322,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			// create new instance
 			if (length < maxSize)
 				return createObject();
-			
+
 			// get the next member if at capacity
 			final basic = members[_marker++];
 
@@ -372,7 +372,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		}
 		else
 			members[index] = null;
-		
+
 		onMemberRemove(basic);
 		
 		return basic;
@@ -411,7 +411,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * @param   order  A constant that defines the sort order.
 	 *                     Possible values are `FlxSort.ASCENDING` (default) and `FlxSort.DESCENDING`.
 	 */
-	public inline function sort(func:(Int,T,T)->Int, order = FlxSort.ASCENDING):Void
+	public inline function sort(func:(Int, T, T) -> Int, order = FlxSort.ASCENDING):Void
 	{
 		members.sort(func.bind(order));
 	}
@@ -469,7 +469,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	public function getFirstIndex(func:T->Bool):Int
 	{
 		var result = -1;
-		for (i=>basic in members)
+		for (i => basic in members)
 		{
 			if (basic != null && func(basic))
 			{
@@ -576,7 +576,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirstExisting():Null<T>
 	{
-		return getFirstHelper((basic)->basic.exists);
+		return getFirstHelper((basic) -> basic.exists);
 	}
 
 	/**
@@ -587,7 +587,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirstAlive():Null<T>
 	{
-		return getFirstHelper((basic)->basic.exists && basic.alive);
+		return getFirstHelper((basic) -> basic.exists && basic.alive);
 	}
 
 	/**
@@ -598,7 +598,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirstDead():Null<T>
 	{
-		return getFirstHelper((basic)->!basic.alive);
+		return getFirstHelper((basic) -> !basic.alive);
 	}
 	
 	/**

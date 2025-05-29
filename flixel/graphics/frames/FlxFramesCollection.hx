@@ -215,7 +215,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	public function getAllByPrefix(prefix:String)
 	{
 		final list = new Array<FlxFrame>();
-		forEachByPrefix(prefix, (frame)->list.push(frame), false);
+		forEachByPrefix(prefix, (frame) -> list.push(frame), false);
 		return list;
 	}
 	
@@ -229,7 +229,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @param   prefix  The name prefix to look for.
 	 * @since 5.3.0
 	 */
-	public inline function forEachByPrefix(prefix:String, func:(FlxFrame)->Void, warnIfEmpty = true, ?warningMsg:String)
+	public inline function forEachByPrefix(prefix:String, func:(FlxFrame) -> Void, warnIfEmpty = true, ?warningMsg:String)
 	{
 		var warn = warnIfEmpty;
 		for (name => frame in framesByName)
@@ -296,7 +296,10 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public function setFramesOffsetByPrefix(prefix:String, offsetX:Float, offsetY:Float, warnIfEmpty = true)
 	{
-		forEachByPrefix(prefix, (frame)->{ frame.offset.set(offsetX, offsetY); }, warnIfEmpty);
+		forEachByPrefix(prefix, (frame) ->
+		{
+			frame.offset.set(offsetX, offsetY);
+		}, warnIfEmpty);
 	}
 
 	/**
@@ -312,7 +315,10 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public function addFramesOffsetByPrefix(prefix:String, offsetX:Float, offsetY:Float, warnIfEmpty = true)
 	{
-		forEachByPrefix(prefix, (frame)->{ frame.offset.add(offsetX, offsetY); }, warnIfEmpty);
+		forEachByPrefix(prefix, (frame) ->
+		{
+			frame.offset.add(offsetX, offsetY);
+		}, warnIfEmpty);
 	}
 
 	/**

@@ -167,16 +167,16 @@ class FlxAtlas implements IFlxDestroyable
 	/**
 	 * Adds a new node to the atlas.
 	 *
-	 * @param   Graphic   Image to store. Could be a `BitmapData`, `String`
+	 * @param   graphic   Image to store. Could be a `BitmapData`, `String`
 	 *                    (key from OpenFL's asset cache) or a `Class<Dynamic>`.
-	 * @param   Key       Image name, optional.
+	 * @param   key       Image name, optional.
 	 *                    You can omit it if you pass `String` or `Class<Dynamic>` as a `Graphic` source.
 	 * @return  Newly created and added node, or `null` if there is no space for it.
 	 */
-	public function addNode(Graphic:FlxGraphicSource, ?Key:String):FlxNode
+	public function addNode(graphic:FlxGraphicSource, ?key:String):FlxNode
 	{
-		var key:String = FlxAssets.resolveKey(Graphic, Key);
-
+		key = FlxAssets.resolveKey(graphic, key);
+		
 		if (key == null)
 		{
 			#if FLX_DEBUG
@@ -188,12 +188,12 @@ class FlxAtlas implements IFlxDestroyable
 		if (hasNodeWithName(key))
 			return nodes.get(key);
 
-		var data:BitmapData = FlxAssets.resolveBitmapData(Graphic);
-
+		var data:BitmapData = FlxAssets.resolveBitmapData(graphic);
+		
 		if (data == null)
 		{
 			#if FLX_DEBUG
-			throw "addNode can't find BitmapData with specified key: " + Graphic + ". Please provide valid value.";
+			throw "addNode can't find BitmapData with specified key: " + graphic + ". Please provide valid value.";
 			#end
 			return null;
 		}
@@ -292,8 +292,7 @@ class FlxAtlas implements IFlxDestroyable
 
 				if (firstChild.height - insertHeight > 0)
 				{
-					secondGrandChild = new FlxNode(FlxRect.get(firstChild.x, firstChild.y + insertHeight, insertWidth, firstChild.height - insertHeight),
-						this);
+					secondGrandChild = new FlxNode(FlxRect.get(firstChild.x, firstChild.y + insertHeight, insertWidth, firstChild.height - insertHeight), this);
 				}
 			}
 			else // divide vertically
@@ -593,24 +592,24 @@ class FlxAtlas implements IFlxDestroyable
 	 * Generates a new `BitmapData` with spaces between tiles, adds this `BitmapData` to this atlas,
 	 * generates a `FlxTileFrames` object for the added node and returns it. Can be useful for tilemaps.
 	 *
-	 * @param   Graphic        Source image for node, where spaces will be inserted
+	 * @param   graphic        Source image for node, where spaces will be inserted
 	 *                        (could be a `BitmapData`, `String` or `Class<Dynamic>`).
-	 * @param   Key           Optional key for image
+	 * @param   key           Optional key for image
 	 * @param   tileSize      The size of tile in spritesheet
 	 * @param   tileSpacing   Offsets to add in spritesheet between tiles
 	 * @param   tileBorder    Border to add around tiles (helps to avoid "tearing" problem)
 	 * @param   region        Region of source image to use as a source graphic
 	 * @return  Generated `FlxTileFrames` for the added node
 	 */
-	public function addNodeWithSpacesAndBorders(Graphic:FlxGraphicSource, ?Key:String, tileSize:FlxPoint, tileSpacing:FlxPoint, ?tileBorder:FlxPoint,
+	public function addNodeWithSpacesAndBorders(graphic:FlxGraphicSource, ?key:String, tileSize:FlxPoint, tileSpacing:FlxPoint, ?tileBorder:FlxPoint,
 			?region:FlxRect):FlxTileFrames
 	{
-		var key:String = FlxAssets.resolveKey(Graphic, Key);
-
+		key = FlxAssets.resolveKey(graphic, key);
+		
 		if (key == null)
 		{
 			#if FLX_DEBUG
-			throw "addNodeWithSpacings can't find the key for specified BitmapData." + " Please provide not null value as a Key argument.";
+			throw "addNodeWithSpacings can't find the key for specified BitmapData." + " Please provide not null value as a key argument.";
 			#end
 			return null;
 		}
@@ -620,12 +619,12 @@ class FlxAtlas implements IFlxDestroyable
 		if (hasNodeWithName(key))
 			return nodes.get(key).getTileFrames(tileSize, tileSpacing, tileBorder);
 
-		var data:BitmapData = FlxAssets.resolveBitmapData(Graphic);
-
+		var data:BitmapData = FlxAssets.resolveBitmapData(graphic);
+		
 		if (data == null)
 		{
 			#if FLX_DEBUG
-			throw "addNodeWithSpacings can't find BitmapData with specified key: " + Graphic + ". Please provide valid value.";
+			throw "addNodeWithSpacings can't find BitmapData with specified key: " + graphic + ". Please provide valid value.";
 			#end
 			return null;
 		}
@@ -636,7 +635,7 @@ class FlxAtlas implements IFlxDestroyable
 		if (node == null)
 		{
 			#if FLX_DEBUG
-			throw "addNodeWithSpacings can't insert provided image: " + Graphic + ") in atlas. It's probably too big.";
+			throw "addNodeWithSpacings can't insert provided image: " + graphic + ") in atlas. It's probably too big.";
 			#end
 			return null;
 		}

@@ -36,13 +36,13 @@ class FlxActionInput implements IFlxDestroyable
 	 */
 	public var trigger(default, null):FlxInputState;
 
-	function new(InputType:FlxInputType, Device:FlxInputDevice, InputID:Int, Trigger:FlxInputState, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
+	function new(inputType:FlxInputType, device:FlxInputDevice, inputId:Int, trigger:FlxInputState, deviceId:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
-		type = InputType;
-		device = Device;
-		inputID = InputID;
-		trigger = Trigger;
-		deviceID = DeviceID;
+		this.type = inputType;
+		this.device = device;
+		this.inputID = inputId;
+		this.trigger = trigger;
+		this.deviceID = deviceId;
 	}
 
 	public function update():Void {}
@@ -138,15 +138,15 @@ class FlxInputDeviceObject
 	public var id:Int;
 	public var model:String;
 
-	public function new(Device:FlxInputDevice, ID:Int, Model:String = "")
+	public function new(device:FlxInputDevice, id:Int, model:String = "")
 	{
-		device = Device;
-		id = ID;
-		model = Model;
+		this.device = device;
+		this.id = id;
+		this.model = model;
 	}
 
 	public function toString():String
 	{
-		return "{device:" + device + ",id:" + id + ",model:" + model + "}";
+		return "{device:" + device + ", id:" + id + ", model:" + model + "}";
 	}
 }
