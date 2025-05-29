@@ -118,37 +118,37 @@ class FlxAnimation extends FlxBaseAnimation
 	/**
 	 * Starts this animation playback.
 	 *
-	 * @param   Force      Whether to force this animation to restart.
-	 * @param   Reversed   Whether to play animation backwards or not.
+	 * @param   force      Whether to force this animation to restart.
+	 * @param   reversed   Whether to play animation backwards or not.
 	 * @param   Frame      The frame number in this animation you want to start from (`0` by default).
 	 *                     If you pass a negative value then it will start from a random frame.
-	 *                     If you `Reversed` is `true`, the frame value will be "reversed"
+	 *                     If you `reversed` is `true`, the frame value will be "reversed"
 	 *                     (`Frame = numFrames - 1 - Frame`), so `Frame` value will mean frame index
 	 *                     from the animation's end in this case.
 	 */
-	public function play(Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
+	public function play(force:Bool = false, reversed:Bool = false, frame:Int = 0):Void
 	{
-		if (!Force && !finished && reversed == Reversed)
+		if (!force && !finished && this.reversed == reversed)
 		{
 			paused = false;
 			return;
 		}
 
-		reversed = Reversed;
+		this.reversed = reversed;
 		paused = false;
 		_frameTimer = 0;
 		finished = frameDuration == 0;
 
 		var maxFrameIndex:Int = numFrames - 1;
-		if (Frame < 0)
+		if (frame < 0)
 			curFrame = FlxG.random.int(0, maxFrameIndex);
 		else
 		{
-			if (Frame > maxFrameIndex)
-				Frame = maxFrameIndex;
-			if (reversed)
-				Frame = (maxFrameIndex - Frame);
-			curFrame = Frame;
+			if (frame > maxFrameIndex)
+				frame = maxFrameIndex;
+			if (this.reversed)
+				frame = (maxFrameIndex - frame);
+			curFrame = frame;
 		}
 
 		if (finished)
@@ -233,7 +233,7 @@ class FlxAnimation extends FlxBaseAnimation
 			// prevents null ref when the sprite is destroyed on finishCallback (#2782)
 			if (finished)
 				break;
-			
+
 			curFrameDuration = getCurrentFrameDuration();
 		}
 	}

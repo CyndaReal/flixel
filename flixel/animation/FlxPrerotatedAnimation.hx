@@ -11,23 +11,23 @@ class FlxPrerotatedAnimation extends FlxBaseAnimation
 
 	var baked:Float;
 
-	public function new(Parent:FlxAnimationController, Baked:Float)
+	public function new(parent:FlxAnimationController, baked:Float)
 	{
-		super(Parent, PREROTATED);
-		baked = Baked;
-		rotations = Math.round(360 / Baked);
+		super(parent, PREROTATED);
+		this.baked = baked;
+		rotations = Math.round(360 / baked);
 	}
 
 	public var angle(default, set):Float = 0;
 
-	function set_angle(Value:Float):Float
+	function set_angle(value:Float):Float
 	{
-		if (Math.isNaN(Value))
+		if (Math.isNaN(value))
 			throw "angle must not be NaN";
 
 		var oldIndex:Int = curIndex;
-		var angleHelper:Int = Math.floor(Value % 360);
-
+		var angleHelper:Int = Math.floor(value % 360);
+		
 		while (angleHelper < 0)
 		{
 			angleHelper += 360;
@@ -40,23 +40,23 @@ class FlxPrerotatedAnimation extends FlxBaseAnimation
 			curIndex = newIndex;
 		}
 
-		return angle = Value;
+		return angle = value;
 	}
 
-	override function set_curIndex(Value:Int):Int
+	override function set_curIndex(value:Int):Int
 	{
-		curIndex = Value;
-
+		curIndex = value;
+		
 		if (parent != null)
 		{
-			parent.frameIndex = Value;
+			parent.frameIndex = value;
 		}
 
-		return Value;
+		return value;
 	}
 
-	override public function clone(Parent:FlxAnimationController):FlxPrerotatedAnimation
+	override public function clone(parent:FlxAnimationController):FlxPrerotatedAnimation
 	{
-		return new FlxPrerotatedAnimation(Parent, baked);
+		return new FlxPrerotatedAnimation(parent, baked);
 	}
 }

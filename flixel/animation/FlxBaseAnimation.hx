@@ -22,22 +22,22 @@ class FlxBaseAnimation implements IFlxDestroyable
 	 */
 	public var curIndex(default, set):Int = 0;
 
-	function set_curIndex(Value:Int):Int
+	function set_curIndex(value:Int):Int
 	{
-		curIndex = Value;
-
+		curIndex = value;
+		
 		if (parent != null && parent._curAnim == this)
 		{
-			parent.frameIndex = Value;
+			parent.frameIndex = value;
 		}
 
-		return Value;
+		return value;
 	}
 
-	public function new(Parent:FlxAnimationController, Name:String)
+	public function new(parent:FlxAnimationController, name:String)
 	{
-		parent = Parent;
-		name = Name;
+		this.parent = parent;
+		this.name = name;
 	}
 
 	public function destroy():Void
@@ -48,7 +48,7 @@ class FlxBaseAnimation implements IFlxDestroyable
 
 	public function update(elapsed:Float):Void {}
 
-	public function clone(Parent:FlxAnimationController):FlxBaseAnimation
+	public function clone(parent:FlxAnimationController):FlxBaseAnimation
 	{
 		return null;
 	}

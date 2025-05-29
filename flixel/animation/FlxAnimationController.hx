@@ -56,7 +56,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param   frameIndex   The current animation's frameIndex in the tile sheet
 	 */
 	@:deprecated('callback is deprecated, use onFrameChange.add') // 5.9.0
-	public var callback:(animName:String, frameNumber:Int, frameIndex:Int)->Void;
+	public var callback:(animName:String, frameNumber:Int, frameIndex:Int) -> Void;
 	
 	/**
 	 * If assigned, will be called each time the current animation finishes.
@@ -74,7 +74,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param   frameIndex   The current animation's frameIndex in the tile sheet
 	 * @since 5.9.0
 	 */
-	public final onFrameChange = new FlxTypedSignal<(animName:String, frameNumber:Int, frameIndex:Int)->Void>();
+	public final onFrameChange = new FlxTypedSignal<(animName:String, frameNumber:Int, frameIndex:Int) -> Void>();
 	
 	/**
 	 * Dispatches each time the current animation finishes.
@@ -82,7 +82,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param   animName  The name of the current animation
 	 * @since 5.9.0
 	 */
-	public final onFinish = new FlxTypedSignal<(animName:String)->Void>();
+	public final onFinish = new FlxTypedSignal<(animName:String) -> Void>();
 	
 	/**
 	 * Dispatches each time the current animation's loop is complete.
@@ -91,7 +91,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param   animName  The name of the current animation
 	 * @since 5.9.0
 	 */
-	public final onLoop = new FlxTypedSignal<(animName:String)->Void>();
+	public final onLoop = new FlxTypedSignal<(animName:String) -> Void>();
 	
 	/**
 	 * How fast or slow time should pass for this animation controller
@@ -273,14 +273,14 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Removes (and destroys) an animation.
 	 *
-	 * @param   Name   The name of animation to remove.
+	 * @param   name   The name of animation to remove.
 	 */
-	public function remove(Name:String):Void
+	public function remove(name:String):Void
 	{
-		var anim:FlxAnimation = _animations.get(Name);
+		var anim:FlxAnimation = _animations.get(name);
 		if (anim != null)
 		{
-			_animations.remove(Name);
+			_animations.remove(name);
 			anim.destroy();
 		}
 	}
@@ -321,24 +321,24 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Adds a new animation to the sprite.
 	 *
-	 * @param   Name         What this animation should be called (e.g. `"run"`).
-	 * @param   FrameNames   An array of image names from the atlas indicating what frames to play in what order.
-	 * @param   FrameRate    The speed in frames per second that the animation should play at (e.g. `40` fps).
-	 * @param   Looped       Whether or not the animation is looped or just plays once.
-	 * @param   FlipX        Whether the frames should be flipped horizontally.
-	 * @param   FlipY        Whether the frames should be flipped vertically.
+	 * @param   name         What this animation should be called (e.g. `"run"`).
+	 * @param   frameNames   An array of image names from the atlas indicating what frames to play in what order.
+	 * @param   frameRate    The speed in frames per second that the animation should play at (e.g. `40` fps).
+	 * @param   looped       Whether or not the animation is looped or just plays once.
+	 * @param   flipX        Whether the frames should be flipped horizontally.
+	 * @param   flipY        Whether the frames should be flipped vertically.
 	 */
-	public function addByNames(Name:String, FrameNames:Array<String>, FrameRate:Float = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
+	public function addByNames(name:String, frameNames:Array<String>, frameRate:Float = 30, looped:Bool = true, flipX:Bool = false, flipY:Bool = false):Void
 	{
 		if (_sprite.frames != null)
 		{
 			var indices:Array<Int> = new Array<Int>();
-			byNamesHelper(indices, FrameNames); // finds frames and appends them to the blank array
-
+			byNamesHelper(indices, frameNames); // finds frames and appends them to the blank array
+			
 			if (indices.length > 0)
 			{
-				var anim = new FlxAnimation(this, Name, indices, FrameRate, Looped, FlipX, FlipY);
-				_animations.set(Name, anim);
+				var anim = new FlxAnimation(this, name, indices, frameRate, looped, flipX, flipY);
+				_animations.set(name, anim);
 			}
 		}
 	}
@@ -348,8 +348,8 @@ class FlxAnimationController implements IFlxDestroyable
 	 * Use this method when the exact name of each frame from the atlas is known (e.g. `"walk00.png"`, `"walk01.png"`).
 	 * The animation must already exist in order to append frames to it.
 	 *
-	 * @param   Name         What the existing animation is called (e.g. `"run"`).
-	 * @param   FrameNames   An array of image names from atlas indicating what frames to append.
+	 * @param   name         What the existing animation is called (e.g. `"run"`).
+	 * @param   frameNames   An array of image names from atlas indicating what frames to append.
 	 */
 	public function appendByNames(name:String, frameNames:Array<String>):Void
 	{
@@ -369,29 +369,29 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Adds a new animation to the sprite. Should be slightly faster than `addByIndices()`.
 	 *
-	 * @param   Name        What this animation should be called (e.g. `"run"`).
-	 * @param   Prefix      Common beginning of image names in the atlas (e.g. `"tiles-"`).
-	 * @param   Indices     An array of strings indicating what frames to play in what order
+	 * @param   name        What this animation should be called (e.g. `"run"`).
+	 * @param   prefix      Common beginning of image names in the atlas (e.g. `"tiles-"`).
+	 * @param   indices     An array of strings indicating what frames to play in what order
 	 *                      (e.g. `["01", "02", "03"]`).
-	 * @param   Postfix     Common ending of image names in atlas (e.g. `".png"`).
-	 * @param   FrameRate   The speed in frames per second that the animation should play at (e.g. `40` fps).
-	 * @param   Looped      Whether or not the animation is looped or just plays once.
-	 * @param   FlipX       Whether the frames should be flipped horizontally.
-	 * @param   FlipY       Whether the frames should be flipped vertically.
+	 * @param   postfix     Common ending of image names in atlas (e.g. `".png"`).
+	 * @param   frameRate   The speed in frames per second that the animation should play at (e.g. `40` fps).
+	 * @param   looped      Whether or not the animation is looped or just plays once.
+	 * @param   flipX       Whether the frames should be flipped horizontally.
+	 * @param   flipY       Whether the frames should be flipped vertically.
 	 */
-	public function addByStringIndices(Name:String, Prefix:String, Indices:Array<String>, Postfix:String, FrameRate:Float = 30, Looped:Bool = true,
-			FlipX:Bool = false, FlipY:Bool = false):Void
+	public function addByStringIndices(name:String, prefix:String, indices:Array<String>, postfix:String, frameRate:Float = 30, looped:Bool = true,
+			flipX:Bool = false, flipY:Bool = false):Void
 	{
 		if (_sprite.frames != null)
 		{
 			var frameIndices:Array<Int> = new Array<Int>();
 			// finds frames and appends them to the blank array
-			byStringIndicesHelper(frameIndices, Prefix, Indices, Postfix);
-
+			byStringIndicesHelper(frameIndices, prefix, indices, postfix);
+			
 			if (frameIndices.length > 0)
 			{
-				var anim:FlxAnimation = new FlxAnimation(this, Name, frameIndices, FrameRate, Looped, FlipX, FlipY);
-				_animations.set(Name, anim);
+				var anim:FlxAnimation = new FlxAnimation(this, name, frameIndices, frameRate, looped, flipX, flipY);
+				_animations.set(name, anim);
 			}
 		}
 	}
@@ -426,28 +426,28 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Adds a new animation to the sprite.
 	 *
-	 * @param   Name        What this animation should be called (e.g. `"run"`).
-	 * @param   Prefix      Common beginning of image names in the atlas (e.g. "tiles-").
-	 * @param   Indices     An array of numbers indicating what frames to play in what order (e.g. `[0, 1, 2]`).
-	 * @param   Postfix     Common ending of image names in the atlas (e.g. `".png"`).
-	 * @param   FrameRate   The speed in frames per second that the animation should play at (e.g. `40` fps).
-	 * @param   Looped      Whether or not the animation is looped or just plays once.
-	 * @param   FlipX       Whether the frames should be flipped horizontally.
-	 * @param   FlipY       Whether the frames should be flipped vertically.
+	 * @param   name        What this animation should be called (e.g. `"run"`).
+	 * @param   prefix      Common beginning of image names in the atlas (e.g. "tiles-").
+	 * @param   indices     An array of numbers indicating what frames to play in what order (e.g. `[0, 1, 2]`).
+	 * @param   postfix     Common ending of image names in the atlas (e.g. `".png"`).
+	 * @param   frameRate   The speed in frames per second that the animation should play at (e.g. `40` fps).
+	 * @param   looped      Whether or not the animation is looped or just plays once.
+	 * @param   flipX       Whether the frames should be flipped horizontally.
+	 * @param   flipY       Whether the frames should be flipped vertically.
 	 */
-	public function addByIndices(Name:String, Prefix:String, Indices:Array<Int>, Postfix:String, FrameRate:Float = 30, Looped:Bool = true, FlipX:Bool = false,
-			FlipY:Bool = false):Void
+	public function addByIndices(name:String, prefix:String, indices:Array<Int>, postfix:String, frameRate:Float = 30, looped:Bool = true, flipX:Bool = false,
+			flipY:Bool = false):Void
 	{
 		if (_sprite.frames != null)
 		{
 			var frameIndices:Array<Int> = new Array<Int>();
 			// finds frames and appends them to the blank array
-			byIndicesHelper(frameIndices, Prefix, Indices, Postfix);
-
+			byIndicesHelper(frameIndices, prefix, indices, postfix);
+			
 			if (frameIndices.length > 0)
 			{
-				var anim:FlxAnimation = new FlxAnimation(this, Name, frameIndices, FrameRate, Looped, FlipX, FlipY);
-				_animations.set(Name, anim);
+				var anim:FlxAnimation = new FlxAnimation(this, name, frameIndices, frameRate, looped, flipX, flipY);
+				_animations.set(name, anim);
 			}
 		}
 	}
@@ -795,8 +795,8 @@ class FlxAnimationController implements IFlxDestroyable
 		#if FLX_DEBUG
 		if (invalidFrames.length == 0 || !logError)
 			return;
-		
-		final names = invalidFrames.map((f)->'"${f.name}"').join(", ");
+
+		final names = invalidFrames.map((f) -> '"${f.name}"').join(", ");
 		FlxG.log.error('Attempting to use frames that belong to a destroyed graphic, frame names: $names');
 		#end
 	}
@@ -815,13 +815,13 @@ class FlxAnimationController implements IFlxDestroyable
 		return invalid;
 	}
 
-	function set_frameIndex(Frame:Int):Int
+	function set_frameIndex(frame:Int):Int
 	{
 		if (_sprite.frames != null && numFrames > 0)
 		{
-			Frame = Frame % numFrames;
-			_sprite.frame = _sprite.frames.frames[Frame];
-			frameIndex = Frame;
+			frame = frame % numFrames;
+			_sprite.frame = _sprite.frames.frames[frame];
+			frameIndex = frame;
 			fireCallback();
 		}
 
@@ -833,9 +833,9 @@ class FlxAnimationController implements IFlxDestroyable
 		return _sprite.frame.name;
 	}
 
-	function set_frameName(Value:String):String
+	function set_frameName(value:String):String
 	{
-		if (_sprite.frames != null && _sprite.frames.exists(Value))
+		if (_sprite.frames != null && _sprite.frames.exists(value))
 		{
 			if (_curAnim != null)
 			{
@@ -843,14 +843,14 @@ class FlxAnimationController implements IFlxDestroyable
 				_curAnim = null;
 			}
 
-			var frame = _sprite.frames.getByName(Value);
+			var frame = _sprite.frames.getByName(value);
 			if (frame != null)
 			{
 				frameIndex = getFrameIndex(frame);
 			}
 		}
 
-		return Value;
+		return value;
 	}
 
 	function get_name():String
@@ -863,10 +863,10 @@ class FlxAnimationController implements IFlxDestroyable
 		return animName;
 	}
 
-	function set_name(AnimName:String):String
+	function set_name(animName:String):String
 	{
-		play(AnimName);
-		return AnimName;
+		play(animName);
+		return animName;
 	}
 
 	/**
